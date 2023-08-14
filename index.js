@@ -38,7 +38,7 @@ server.on('request', async (request, res) => {
     const jsonErr = JSON.stringify(err, Object.getOwnPropertyNames(err))
 
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ msg: 'Internal server error', err: jsonErr }));
+    res.end(JSON.stringify({ msg: 'Internal server error', err: jsonErr }, null, 2));
   }
 });
 
