@@ -7,7 +7,7 @@ service:
   ports:
     www:
       port: 80 # The port that the service will be exposed on
-      targetPort: 9898 # The port that the container will be listening on
+      targetPort: 8000
 
 containers:
   frontend:
@@ -16,5 +16,5 @@ containers:
       Hello: World
 
 resources:
-  dns: # We need a DNS record to point to the service 
+  dns: # We need a DNS record to point to the service
     type: dns
