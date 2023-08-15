@@ -9,5 +9,3 @@ spec:
           "/":
             type: prefix
             port: 80
-
-  serviceAccountName: "${resources.k8s-service-account.name}"
