@@ -51,8 +51,8 @@ jobs:
             }'
       - name: Deploy using Score
         run: |
-          wget https://github.com/score-spec/score-humanitec/releases/download/0.4.0/score-humanitec_0.4.0_linux_amd64.tar.gz
-          tar -xvzf ./score-humanitec_0.4.0_linux_amd64.tar.gz
+          wget https://github.com/score-spec/score-humanitec/releases/download/0.6.0/score-humanitec_0.6.0_linux_amd64.tar.gz
+          tar -xvzf ./score-humanitec_0.6.0_linux_amd64.tar.gz
 
           cat <<EOF > overrides.score.yaml
           apiVersion: score.dev/v1b1
@@ -62,4 +62,3 @@ jobs:
           EOF
 
           ./score-humanitec delta --env development --app item-list --org="${{ secrets.HUMANITEC_ORG_ID }}" --token "${{ secrets.HUMANITEC_TOKEN }}" --deploy
-
