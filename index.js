@@ -4,7 +4,6 @@ const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
 
 const client = new S3Client({});
 
-
 const server = http.createServer();
 
 const awsBucketName = process.env.AWS_BUCKET_NAME
