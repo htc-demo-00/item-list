@@ -1,12 +1,15 @@
 
 const http = require('node:http');
 const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
+const { SQSClient, GetQueueAttributesCommand } = require("@aws-sdk/client-sqs");
 
-const client = new S3Client({});
+const s3Client = new S3Client({});
+const sqsClient = new SQSClient({});
 
 const server = http.createServer();
 
 const awsBucketName = process.env.AWS_BUCKET_NAME
+const sqsQueueUrl = process.env.AWS_SQS_QUEUE_URL
 
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGQUIT']) {
   process.on(sig, () => {
@@ -22,17 +25,28 @@ for (const sig of ['SIGINT', 'SIGTERM', 'SIGQUIT']) {
 
 // Listen to the request event
 server.on('request', async (request, res) => {
-  const input = {
+  const listCommand = new ListObjectsCommand({
     Bucket: awsBucketName,
-  };
+  });
 
-  const command = new ListObjectsCommand(input);
+  const queueAttributesCommand = new GetQueueAttributesCommand({
+    QueueUrl: sqsQueueUrl,
+    AttributeNames: ['ApproximateNumberOfMessages']
+  });
 
   try {
-    const response = await client.send(command);
+    const s3Response = await s3Client.send(listCommand);
+    const sqsResponse = await sqsClient.send(queueAttributesCommand);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(response.Contents));
+    res.end(JSON.stringify({
+      s3: {
+        list: s3Response.Contents,
+      },
+      sqs: {
+        queueAttributes: sqsResponse.Attributes,
+      }
+    }));
   } catch (err) {
     const jsonErr = JSON.stringify(err, Object.getOwnPropertyNames(err))
 

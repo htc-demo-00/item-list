@@ -15,9 +15,12 @@ containers:
     variables:
       AWS_REGION: ${resources.s3.region}
       AWS_BUCKET_NAME: ${resources.s3.bucket_name}
+      AWS_SQS_QUEUE_URL: ${resources.sqs.url}
 
 resources:
   dns: # We need a DNS record to point to the service
     type: dns
   s3: # We need an S3 bucket to store the static files
     type: s3
+  sqs:
+    type: sqs
