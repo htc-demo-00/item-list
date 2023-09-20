@@ -8,7 +8,7 @@ const sqsClient = new SQSClient({});
 
 const server = http.createServer();
 
-const awsBucketName = process.env.AWS_BUCKET_NAME
+const awsBucket = process.env.AWS_BUCKET
 const sqsQueueUrl = process.env.AWS_SQS_QUEUE_URL
 
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGQUIT']) {
@@ -26,7 +26,7 @@ for (const sig of ['SIGINT', 'SIGTERM', 'SIGQUIT']) {
 // Listen to the request event
 server.on('request', async (request, res) => {
   const listCommand = new ListObjectsCommand({
-    Bucket: awsBucketName,
+    Bucket: awsBucket,
   });
 
   const queueAttributesCommand = new GetQueueAttributesCommand({

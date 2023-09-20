@@ -14,7 +14,7 @@ containers:
     image: # Set by pipeline
     variables:
       AWS_REGION: ${resources.s3.region}
-      AWS_BUCKET_NAME: ${resources.s3.bucket_name}
+      AWS_BUCKET: ${resources.s3.bucket}
       AWS_SQS_QUEUE_URL: ${resources.sqs.url}
 
 resources:
