@@ -11,6 +11,10 @@ const server = http.createServer();
 const awsBucket = process.env.AWS_BUCKET
 const sqsQueueUrl = process.env.AWS_SQS_QUEUE_URL
 
+const prettyJSON = (data) => {
+  return JSON.stringify(data, null, 2);
+}
+
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGQUIT']) {
   process.on(sig, () => {
     server.close((err) => {
@@ -39,7 +43,7 @@ server.on('request', async (request, res) => {
     const sqsResponse = await sqsClient.send(queueAttributesCommand);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
+    res.end(prettyJSON({
       s3: {
         list: s3Response.Contents,
       },
@@ -48,10 +52,10 @@ server.on('request', async (request, res) => {
       }
     }));
   } catch (err) {
-    const jsonErr = JSON.stringify(err, Object.getOwnPropertyNames(err))
+    const jsonErr = JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
 
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ msg: 'Internal server error', err: jsonErr }, null, 2));
+    res.end(prettyJSON({ msg: 'Internal server error', err: jsonErr }));
   }
 });
 
